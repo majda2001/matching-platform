@@ -1,0 +1,111 @@
+<div class="page-container">
+  <header class="hero">
+    <div class="badge">
+      <span class="dot"></span> ANALYSE INTELLIGENTE
+    </div>
+    <h1>
+      Votre carrière mérite <br>
+      une <span class="gradient-text">correspondance parfaite</span>
+    </h1>
+    <p class="subtitle">
+      Téléchargez votre CV et collez l'offre pour maximiser votre score de compatibilité.
+    </p>
+  </header>
+
+  <main class="main-content">
+    <div class="card upload-card">
+      <div class="card-header">
+        <div class="icon-box blue-bg">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        </div>
+        <div>
+          <h3>Votre CV</h3>
+          <p class="sub-label">Format PDF ou DOCX</p>
+        </div>
+      </div>
+
+      <div class="drop-zone">
+        <div class="drop-content" *ngIf="!fileName; else fileSelectedTemp">
+          <div class="cloud-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17.5 19C19.9853 19 22 16.9853 22 14.5C22 12.132 20.177 10.244 17.819 10.022C17.3999 6.27364 14.2483 3.5 10.5 3.5C6.35786 3.5 3 6.85786 3 11C3 11.236 3.011 11.468 3.033 11.696C1.296 12.28 0 13.916 0 15.5C0 17.9853 2.01472 20 4.5 20H16.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 16V10M12 10L9 13M12 10L15 13" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h4>Glisser votre CV</h4>
+          <label class="btn-upload">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+            Parcourir
+            <input type="file" (change)="onFileSelected($event)" accept=".pdf,.docx" hidden>
+          </label>
+        </div>
+
+        <ng-template #fileSelectedTemp>
+          <div class="file-success fade-in">
+             <div class="cloud-icon success">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+             </div>
+             <div class="file-info">
+                <h4 [title]="fileName">{{ fileName }}</h4>
+                <p>CV chargé avec succès</p>
+             </div>
+             <button class="btn-change-file" (click)="removeFile()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                Changer le fichier
+             </button>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="card job-card">
+      <div class="card-header">
+        <div class="icon-box purple-bg">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+        </div>
+        <div>
+          <h3>L'offre d'emploi</h3>
+          <p class="sub-label">Analyse du texte</p>
+        </div>
+      </div>
+      <div class="text-area-wrapper">
+        <textarea [(ngModel)]="jobDescription" placeholder="Collez l'offre ici..."></textarea>
+        <div class="char-count">{{ jobDescription.length }} CARACTÈRES</div>
+      </div>
+    </div>
+  </main>
+
+  <section class="result-section">
+    <div class="action-container" *ngIf="!isAnalyzed && !isLoading">
+      <button type="button" class="btn-primary-pulse" (click)="analyze()" [disabled]="!fileName || !jobDescription">
+        ✨ Lancer l'Analyse
+      </button>
+    </div>
+
+    <div class="loading-container" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Analyse de compatibilité...</p>
+    </div>
+
+    <div class="result-wrapper fade-in-up" *ngIf="isAnalyzed && !isLoading">
+
+      <div class="result-card">
+        <div class="score-circle">
+          <svg viewBox="0 0 36 36" class="circular-chart">
+            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+            <path class="circle" [attr.stroke-dasharray]="matchScore + ', 100'" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+          </svg>
+          <div class="score-text">
+            <span class="number">{{ matchScore }}<small>%</small></span>
+            <span class="label">MATCH</span>
+          </div>
+        </div>
+        <div class="score-details">
+          <div class="status-badge"><span class="dot-green"></span> MATCH TROUVÉ</div>
+          <h2>Candidature Robuste</h2>
+          <p>Votre profil est en adéquation à <strong>{{matchScore}}%</strong> avec le poste.</p>
+        </div>
+      </div>
+      <button class="btn-recalculate" (click)="recalculate()">Recommencer</button>
+    </div>
+
+    <div class="footer-note">Traitement intelligent via IA sémantique.</div>
+  </section>
+</div>
