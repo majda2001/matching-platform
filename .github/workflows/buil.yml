@@ -43,7 +43,7 @@ jobs:
       with:
         context: ./matching_front         # dossier contenant Dockerfile
         dockerfile: Dockerfile               # chemin relatif du Dockerfile
-        push:false                          # push automatique
+        push: false                          # push automatique
         tags:  $DOCKER_USER/matching-frontend:latest
 
     - name: Docker login
