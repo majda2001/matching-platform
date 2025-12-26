@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 import google.generativeai as genai
 import os
 import sys
@@ -8,7 +9,8 @@ import re
 from datetime import datetime
 
 
-API_KEY = "AIzaSyAjm8IUlV9VCwS-Sta527ll5AokNjeHrzg"  
+load_dotenv()  # charge les variables depuis .env
+API_KEY = os.getenv("API_KEY")
 MODEL_NAME = "gemini-2.5-flash-lite"
 
 if not API_KEY:

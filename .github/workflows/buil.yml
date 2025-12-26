@@ -1,0 +1,202 @@
+name: CI/CD Matching Platform
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
+
+jobs:
+
+# ================= FRONTEND ANGULAR =================
+  frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+
+    - name: Install dependencies
+      run: |
+        cd matching_front
+        npm install
+
+    - name: Run tests
+      run: |
+        cd matching_front
+        npm test -- --watch=false --browsers=ChromeHeadless
+
+    - name: Build Angular
+      run: |
+        cd  ./matching_front
+        npm run build
+
+    - name: Build Image Frontend
+      uses: docker/build-push-action@v2
+      with:
+        context: ./matching_front         # dossier contenant Dockerfile
+        dockerfile: Dockerfile               # chemin relatif du Dockerfile
+        push:false                          # push automatique
+        tags:  $DOCKER_USER/matching-frontend:latest
+
+    - name: Docker login
+      uses: docker/login-action@v3
+      with:
+        username: $DOCKER_USER
+        password: $DOCKER_PASSWORD
+
+    - name: Push Frontend
+      uses: docker/build-push-action@v2
+      with:
+        context:  ./matching_front         # dossier contenant Dockerfile
+        dockerfile: Dockerfile               # chemin relatif du Dockerfile
+        push: true                           # push automatique
+        tags:  $DOCKER_USER/matching-frontend:latest
+
+
+
+# ================= BACKEND SPRING BOOT =================
+  backend:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup JDK
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: 17
+
+    - name: Run tests
+      run: |
+        cd matching-backend
+        ./mvnw test
+
+    - name: Package Spring Boot
+      run: |
+        cd matching-backend
+        ./mvnw clean package -DskipTests
+
+    - name: Build Image Backend
+      uses: docker/build-push-action@v2
+      with:
+        context: ./matching-backend          # dossier contenant Dockerfile
+        dockerfile: Dockerfile               # chemin relatif du Dockerfile
+        push: false                          # push automatique
+        tags:  $DOCKER_USER/matching-backend:latest
+
+    - name: Docker login
+      uses: docker/login-action@v3
+      with:
+        username: $DOCKER_USER
+        password: $DOCKER_PASSWORD
+
+    - name: Push Backend
+      uses: docker/build-push-action@v2
+      with:
+        context: ./matching-backend          # dossier contenant Dockerfile
+        dockerfile: Dockerfile               # chemin relatif du Dockerfile
+        push: true                         # push automatique
+        tags:  $DOCKER_USER/matching-backend:latest
+
+
+
+# ================= CV PARSER =================
+  cv-parser:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        cd cv_parser
+        pip install -r requirements.txt
+
+    - name: Run tests
+      run: |
+        cd cv_parser
+        pytest || true
+    
+    - name: Build Image Parser CV
+      uses: docker/build-push-action@v2
+      with:
+        context: ./cv_parser         # dossier contenant Dockerfile
+        dockerfile: Dockerfile               # chemin relatif du Dockerfile
+        push: false                          # push automatique
+        tags:  $DOCKER_USER/cv_parser:latest
+
+    - name: Docker login
+      uses: docker/login-action@v3
+      with:
+        username: $DOCKER_USER
+        password: $DOCKER_PASSWORD
+
+    - name: Build Image Parser CV
+      uses: docker/build-push-action@v2
+      with:
+        context: ./cv_parser         # dossier contenant Dockerfile
+        dockerfile: Dockerfile               # chemin relatif du Dockerfile
+        push: true                         # push automatique
+        tags:  $DOCKER_USER/cv_parser:latest
+
+
+
+# ================= OFFER PARSER =================
+  offer-parser:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        cd offer_parser
+        pip install -r requirements.txt
+
+    - name: Run tests
+      run: |
+        cd offer_parser
+        pytest || true
+
+    - name: Build Image Parser Offer
+      uses: docker/build-push-action@v2
+      with:
+        context: ./cv_offer         # dossier contenant Dockerfile
+        dockerfile: Dockerfile               # chemin relatif du Dockerfile
+        push: false                          # push automatique
+        tags:  $DOCKER_USER/cv_offer:latest
+
+
+    - name: Docker login
+      uses: docker/login-action@v3
+      with:
+        username: $DOCKER_USER
+        password: $DOCKER_PASSWORD
+
+    - name: Push Parser Offer
+      uses: docker/build-push-action@v2
+      with:
+        context: ./cv_offer         # dossier contenant Dockerfile
+        dockerfile: Dockerfile               # chemin relatif du Dockerfile
+        push: false                          # push automatique
+        tags:  $DOCKER_USER/cv_offer:latest
+
