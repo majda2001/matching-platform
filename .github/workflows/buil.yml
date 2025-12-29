@@ -118,12 +118,12 @@ jobs:
 
     - name: Install dependencies
       run: |
-        cd cv_parser
+        cd parser_cv
         pip install -r requirements.txt
 
     - name: Run tests
       run: |
-        cd cv_parser
+        cd parser_cv
         pytest || true
     
     - name: Build Image Parser CV
@@ -132,7 +132,7 @@ jobs:
         context: ./parser_cv         # dossier contenant Dockerfile
         dockerfile: ./parser_cv/Dockerfile               # chemin relatif du Dockerfile
         push: false                          # push automatique
-        tags:  ${{ env.DOCKER_USER }}/cv_parser:latest
+        tags:  ${{ env.DOCKER_USER }}/parser_cv:latest
 
     - name: Docker login
       uses: docker/login-action@v3
@@ -146,7 +146,7 @@ jobs:
         context: ./parser_cv          # dossier contenant Dockerfile
         dockerfile: ./parser_cv/Dockerfile               # chemin relatif du Dockerfile
         push: true                         # push automatique
-        tags:  ${{ env.DOCKER_USER }}/cv_parser:latest
+        tags:  ${{ env.DOCKER_USER }}/parser_cv:latest
 
 
 

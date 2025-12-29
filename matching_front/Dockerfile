@@ -24,7 +24,7 @@ RUN npm run build -- --configuration=production
 FROM nginx:alpine
 
 # Copier le build Angular vers le serveur Nginx
-COPY --from=build /app/dist/resume-management /usr/share/nginx/html
+COPY --from=build /app/dist/matching_front/browser /usr/share/nginx/html
 
 # Exposer le port 80
 EXPOSE 80
