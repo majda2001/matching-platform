@@ -122,8 +122,7 @@ jobs:
     - name: Install dependencies
       run: |
         cd parser_cv
-        python -m pip install --upgrade pip
-        pip install --index-url https://pypi.org/simple/ google-generative-ai==0.8.3
+        pip install -r requirements.txt
 
     - name: Run tests
       run: |
