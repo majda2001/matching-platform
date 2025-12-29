@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "test": "vitest run",
     "serve:ssr:matching_front": "node dist/matching_front/server/server.mjs"
   },
   "prettier": {
