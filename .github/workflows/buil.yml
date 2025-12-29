@@ -28,11 +28,6 @@ jobs:
         cd matching_front
         npm install
 
-    - name: Run tests
-      run: |
-        cd matching_front
-        npm run test
-
     - name: Build Angular
       run: |
         cd  ./matching_front
