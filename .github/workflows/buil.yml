@@ -21,7 +21,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 18
+        node-version: 22.12
 
     - name: Install dependencies
       run: |
@@ -77,12 +77,12 @@ jobs:
 
     - name: Run tests
       run: |
-        cd matching-backend
+        cd matching_back
         ./mvnw test
 
     - name: Package Spring Boot
       run: |
-        cd matching-backend
+        cd matching_back
         ./mvnw clean package -DskipTests
 
     - name: Build Image Backend
@@ -102,7 +102,7 @@ jobs:
     - name: Push Backend
       uses: docker/build-push-action@v2
       with:
-        context: ./matching-backend          # dossier contenant Dockerfile
+        context: ./matching_back          # dossier contenant Dockerfile
         dockerfile: Dockerfile               # chemin relatif du Dockerfile
         push: true                         # push automatique
         tags:  $DOCKER_USER/matching-backend:latest
@@ -134,7 +134,7 @@ jobs:
     - name: Build Image Parser CV
       uses: docker/build-push-action@v2
       with:
-        context: ./cv_parser         # dossier contenant Dockerfile
+        context: ./parser_cv         # dossier contenant Dockerfile
         dockerfile: Dockerfile               # chemin relatif du Dockerfile
         push: false                          # push automatique
         tags:  $DOCKER_USER/cv_parser:latest
@@ -148,7 +148,7 @@ jobs:
     - name: Build Image Parser CV
       uses: docker/build-push-action@v2
       with:
-        context: ./cv_parser         # dossier contenant Dockerfile
+        context: ./parser_cv          # dossier contenant Dockerfile
         dockerfile: Dockerfile               # chemin relatif du Dockerfile
         push: true                         # push automatique
         tags:  $DOCKER_USER/cv_parser:latest
@@ -169,18 +169,18 @@ jobs:
 
     - name: Install dependencies
       run: |
-        cd offer_parser
+        cd parser_offer
         pip install -r requirements.txt
 
     - name: Run tests
       run: |
-        cd offer_parser
+        cd parser_offer
         pytest || true
 
     - name: Build Image Parser Offer
       uses: docker/build-push-action@v2
       with:
-        context: ./cv_offer         # dossier contenant Dockerfile
+        context: ./parser_offer         # dossier contenant Dockerfile
         dockerfile: Dockerfile               # chemin relatif du Dockerfile
         push: false                          # push automatique
         tags:  $DOCKER_USER/cv_offer:latest
@@ -195,7 +195,7 @@ jobs:
     - name: Push Parser Offer
       uses: docker/build-push-action@v2
       with:
-        context: ./cv_offer         # dossier contenant Dockerfile
+        context: ./parser_offer        # dossier contenant Dockerfile
         dockerfile: Dockerfile               # chemin relatif du Dockerfile
         push: false                          # push automatique
         tags:  $DOCKER_USER/cv_offer:latest
