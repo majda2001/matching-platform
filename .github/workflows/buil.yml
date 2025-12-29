@@ -103,7 +103,7 @@ jobs:
         context: ./matching_back          # dossier contenant Dockerfile
         dockerfile: ./matching_back/Dockerfile               # chemin relatif du Dockerfile
         push: true                         # push automatique
-        tags:  $${{ env.DOCKER_USER }}/matching-backend:latest
+        tags:  ${{ env.DOCKER_USER }}/matching-backend:latest
 
 
 
