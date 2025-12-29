@@ -1,1 +1,1 @@
-google-generative-ai
+google-generative-ai==0.8.3
