@@ -70,6 +70,9 @@ jobs:
         distribution: 'temurin'
         java-version: 17
 
+    - name: Grant execute permission for mvnw
+      run: chmod +x matching_back/mvnw
+      
     - name: Run tests
       run: |
         cd matching_back
@@ -165,6 +168,7 @@ jobs:
     - name: Install dependencies
       run: |
         cd parser_offer
+        python -m pip install --upgrade pip  
         pip install -r requirements.txt
 
     - name: Run tests
