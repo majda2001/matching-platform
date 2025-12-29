@@ -1,7 +1,7 @@
 # =========================
 # Étape 1 : Build Angular
 # =========================
-FROM node:18 AS build
+FROM node:22-alpine as build
 
 # Répertoire de travail
 WORKDIR /app
